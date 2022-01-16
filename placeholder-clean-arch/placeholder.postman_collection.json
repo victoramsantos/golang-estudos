@@ -1,0 +1,146 @@
+{
+	"info": {
+		"_postman_id": "5dad309e-7c16-471a-8959-a92b358432a5",
+		"name": "placeholder",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Poem",
+			"item": [
+				{
+					"name": "get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{path}}:{{port}}/poem",
+							"host": [
+								"{{path}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"poem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get static poem",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{path}}:{{port}}/poem/static",
+							"host": [
+								"{{path}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"poem",
+								"static"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get random poem",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{path}}:{{port}}/poem/random",
+							"host": [
+								"{{path}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"poem",
+								"random"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add poem",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Eu canto porque o instante existe\\ne a minha vida está completa.\\nNão sou alegre nem sou\\ntriste:\\nsou poeta.\",\n    \"author\": \"Cecília Meireles\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{path}}:{{port}}/poem",
+							"host": [
+								"{{path}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"poem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add invalid poem",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{path}}:{{port}}/poem",
+							"host": [
+								"{{path}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"poem"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "path",
+			"value": "localhost"
+		},
+		{
+			"key": "port",
+			"value": "8080",
+			"type": "default"
+		}
+	]
+}
