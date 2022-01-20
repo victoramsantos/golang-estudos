@@ -3,6 +3,10 @@
 Simple golang http-rest app used to test pipelines, environments or something like this. 
 This app is simple enough that whether something is wrong, it's not this app ;)
 
+## Project references
+
+- [https://github.com/bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)
+
 ## Running
 
 Run:

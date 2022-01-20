@@ -13,18 +13,18 @@ func NewPoemUsecase(poemRepository domain.PoemRepository) domain.PoemUsecase {
 	}
 }
 
-func (p *poemUsecase) FetchUsecase() []domain.Poem {
-	return p.poemRepository.FetchPoems()
+func (u *poemUsecase) FetchUsecase() []domain.Poem {
+	return u.poemRepository.FetchPoems()
 }
 
-func (p *poemUsecase) FetchRandomUsecase() domain.Poem {
-	return p.poemRepository.FetchRandomPoem()
+func (u *poemUsecase) FetchRandomUsecase() domain.Poem {
+	return u.poemRepository.FetchRandomPoem()
 }
 
-func (p *poemUsecase) FetchStaticUsecase() domain.Poem {
-	return p.poemRepository.FetchStaticPoem()
+func (u *poemUsecase) FetchStaticUsecase() domain.Poem {
+	return u.poemRepository.FetchStaticPoem()
 }
 
-func (p *poemUsecase) Store(poem *domain.Poem) error {
-	return p.poemRepository.Store(poem)
+func (u *poemUsecase) Store(poem *domain.Poem) error {
+	return u.poemRepository.Store(poem)
 }

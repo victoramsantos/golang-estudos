@@ -11,7 +11,7 @@ type PoemRepository struct {
 }
 
 func (_mock *PoemRepository) Store(poem *domain.Poem) error {
-	_mock.Called()
+	_mock.Called(poem)
 
 	return nil
 }
