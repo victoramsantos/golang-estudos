@@ -27,6 +27,7 @@ type queue struct {
 type QueueConfig struct {
 	Region         string
 	Profile        string
+	AwsEndpoint    string
 	QueueUrl       string
 	SenderConfig   *QueueSenderConfig
 	ConsumerConfig *QueueConsumerConfig
@@ -44,6 +45,7 @@ type QueueConsumerConfig struct {
 func NewQueue(config *QueueConfig) *queue {
 	cfg := aws.Config{
 		Region:      aws.String(config.Region),
+		Endpoint:    aws.String(config.AwsEndpoint),
 		Credentials: credentials.NewSharedCredentials("", config.Profile),
 	}
 
@@ -80,10 +82,11 @@ func (queue *queue) ReadMessage() (*domain.Order, error) {
 	resp, err := queue.client.ReceiveMessage(params)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	if len(resp.Messages) == 0 {
+		log.Println("No message received")
 		return nil, errors.New("no message received")
 	}
 	message := *resp.Messages[0]

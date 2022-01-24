@@ -15,6 +15,7 @@ func NewOrderRepository() domain.OrderRepository {
 	config := queue.QueueConfig{
 		Region:       viper.GetString("queues.aws_config.region"),
 		Profile:      viper.GetString("queues.aws_config.profile"),
+		AwsEndpoint:  viper.GetString("queues.aws_config.endpoint"),
 		QueueUrl:     viper.GetString("queues.order.url"),
 		SenderConfig: nil,
 		ConsumerConfig: &queue.QueueConsumerConfig{

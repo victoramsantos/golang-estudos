@@ -15,7 +15,6 @@ func main() {
 		barCounterRepository,
 		orderRepository,
 	)
-	//Should be Cook() for ever
 	usecase.Cook()
 }
 
