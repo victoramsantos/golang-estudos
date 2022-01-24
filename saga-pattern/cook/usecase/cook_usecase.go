@@ -20,6 +20,6 @@ func NewCookUsecase(barCounterRepository domain.BarCounterRepository, orderRepos
 func (usecase *cookUsecase) Cook() {
 	order := usecase.orderRepository.Consumes()
 	//Should be a go func
-	fmt.Println("cooking order", order.OrderId)
+	fmt.Println("cooking order", order)
 	usecase.barCounterRepository.Delivery(&order)
 }

@@ -1,26 +1,20 @@
 package repository
 
 import (
-	"fmt"
 	"sagapattern/cook/domain"
+	"sagapattern/cook/repository/domain/queue"
 )
 
 type orderRepository struct {
-	// Kafka Consumer Topic
+	queue queue.Queue
 }
 
 func NewOrderRepository() domain.OrderRepository {
-	return &orderRepository{}
+	return &orderRepository{
+		queue: queue.NewQueue(),
+	}
 }
 
 func (repository *orderRepository) Consumes() domain.Order {
-	fmt.Println("Consuming order", 1)
-	items := make([]int, 0)
-	items = append(items, 1)
-	items = append(items, 5)
-
-	return domain.Order{
-		OrderId: 1,
-		Items:   items,
-	}
+	return repository.queue.ReadMessage()
 }
