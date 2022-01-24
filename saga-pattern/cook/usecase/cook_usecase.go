@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"fmt"
 	"log"
+	"math/rand"
 	"sagapattern/cook/domain"
 	"time"
 
@@ -30,7 +30,20 @@ func (usecase *cookUsecase) Cook() {
 			continue
 		}
 		//Should be a go func
-		fmt.Println("cooking order", order)
+		cooking(order)
 		usecase.barCounterRepository.Delivery(order)
 	}
+}
+
+func cooking(order *domain.Order) {
+	cookPeriod := getCookPeriod()
+	log.Println("cooking orderId:", order.OrderId)
+	time.Sleep(time.Duration(cookPeriod) * time.Second)
+	log.Println("cooked orderId:", order.OrderId, "after", cookPeriod, "seconds")
+	order.Status = "DONE"
+}
+
+func getCookPeriod() int {
+	randomizer := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return randomizer.Intn(viper.GetInt("app.cook_period"))
 }

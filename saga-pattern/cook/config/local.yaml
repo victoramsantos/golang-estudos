@@ -1,5 +1,6 @@
 app:
   sleep_period: 5
+  cook_period: 4
 queues:
   aws_config:
     region: us-east-1

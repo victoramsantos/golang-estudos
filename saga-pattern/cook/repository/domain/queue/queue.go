@@ -3,7 +3,6 @@ package queue
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"sagapattern/cook/domain"
 
@@ -65,11 +64,10 @@ func (queue *queue) SendMessage(order *domain.Order) {
 		MessageBody: aws.String(string(jsonMessage)),
 	}
 
-	output, err := queue.client.SendMessage(sqsMessage)
+	_, err := queue.client.SendMessage(sqsMessage)
 	if err != nil {
-		fmt.Printf("could not send message to queue %v: %v\n", queue.config.QueueUrl, err)
+		log.Printf("could not send message to queue %v: %v\n", queue.config.QueueUrl, err)
 	}
-	fmt.Println(output)
 }
 
 func (queue *queue) ReadMessage() (*domain.Order, error) {
@@ -90,12 +88,24 @@ func (queue *queue) ReadMessage() (*domain.Order, error) {
 		return nil, errors.New("no message received")
 	}
 	message := *resp.Messages[0]
-	fmt.Println(message)
 
 	var order domain.Order
 	err = json.Unmarshal([]byte(*message.Body), &order)
 	if err != nil {
-		log.Fatalf("Error occured during unmarshaling. Error: %s", err.Error())
+		log.Printf("Error occured during unmarshaling. Error: %s\n", err.Error())
+		return nil, errors.New("unmarshaling error")
+	}
+
+	receiptHandle := resp.Messages[0].ReceiptHandle
+
+	_, err = queue.client.DeleteMessage(&sqs.DeleteMessageInput{
+		QueueUrl:      aws.String(queue.config.QueueUrl),
+		ReceiptHandle: receiptHandle,
+	})
+
+	if err != nil {
+		log.Printf("Got an error while trying to delete message: %v", err)
+		return nil, errors.New("got error while trying to delete message")
 	}
 
 	return &order, nil
