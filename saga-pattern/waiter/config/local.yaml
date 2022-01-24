@@ -1,10 +1,12 @@
 app:
   server:
     port: 8080
-queues:
-  aws_config:
+aws_config:
     region: us-east-1
     profile: localstack
-    endpoint: http://localhost:4566
+    endpoint: http://localhost:4566    
+queues:
   order:
     url: http://localhost:4566/000000000000/FoodsQueue
+dynamodb:
+  table: Menu

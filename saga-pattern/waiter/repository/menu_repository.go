@@ -1,78 +1,33 @@
 package repository
 
-import "sagapattern/waiter/domain"
+import (
+	"sagapattern/waiter/domain"
+	"sagapattern/waiter/repository/domain/database"
+
+	"github.com/spf13/viper"
+)
 
 type menuRepository struct {
-	menu domain.Menu
+	dynamodbClient database.DynamodbClient
+	cachedMenu     *domain.Menu
 }
 
 func NewMenuRepository() domain.MenuRepository {
-	repository := menuRepository{
-		menu: domain.Menu{
-			Drinks: make([]domain.Item, 0),
-			Foods:  make([]domain.Item, 0),
-		},
+	config := database.DynamodbConfig{
+		Region:      viper.GetString("aws_config.region"),
+		Profile:     viper.GetString("aws_config.profile"),
+		AwsEndpoint: viper.GetString("aws_config.endpoint"),
+		Table:       viper.GetString("dynamodb.table"),
 	}
-
-	repository.menu.Foods = append(repository.menu.Foods,
-		domain.Item{
-			Id:   1,
-			Name: "Batata Frita",
-		},
-	)
-
-	repository.menu.Foods = append(repository.menu.Foods,
-		domain.Item{
-			Id:   2,
-			Name: "Big Mac",
-		},
-	)
-
-	repository.menu.Foods = append(repository.menu.Foods,
-		domain.Item{
-			Id:   3,
-			Name: "Hot Dog",
-		},
-	)
-
-	repository.menu.Foods = append(repository.menu.Foods,
-		domain.Item{
-			Id:   4,
-			Name: "Torta de Limao",
-		},
-	)
-
-	repository.menu.Foods = append(repository.menu.Foods,
-		domain.Item{
-			Id:   5,
-			Name: "Pizza",
-		},
-	)
-
-	repository.menu.Drinks = append(repository.menu.Drinks,
-		domain.Item{
-			Id:   1,
-			Name: "Coke",
-		},
-	)
-
-	repository.menu.Drinks = append(repository.menu.Drinks,
-		domain.Item{
-			Id:   2,
-			Name: "Tequila",
-		},
-	)
-
-	repository.menu.Drinks = append(repository.menu.Drinks,
-		domain.Item{
-			Id:   3,
-			Name: "Pitu",
-		},
-	)
-
-	return &repository
+	return &menuRepository{
+		dynamodbClient: database.NewDynamodbClient(&config),
+		cachedMenu:     nil,
+	}
 }
 
 func (repository *menuRepository) ShowMenu() domain.Menu {
-	return repository.menu
+	if repository.cachedMenu == nil {
+		repository.cachedMenu = repository.dynamodbClient.GetMenu()
+	}
+	return *repository.cachedMenu
 }
