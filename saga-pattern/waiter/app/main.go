@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
-	"sagapattern/waiter/business/controller"
-	"sagapattern/waiter/business/repository"
-	"sagapattern/waiter/business/usecase"
+	"sagapattern/waiter/controller"
+	"sagapattern/waiter/repository"
+	"sagapattern/waiter/usecase"
 
 	"github.com/labstack/echo"
 )
