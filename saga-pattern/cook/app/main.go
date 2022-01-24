@@ -1,8 +1,11 @@
 package main
 
 import (
+	"os"
 	"sagapattern/cook/repository"
 	"sagapattern/cook/usecase"
+
+	"github.com/spf13/viper"
 )
 
 func main() {
@@ -14,4 +17,20 @@ func main() {
 	)
 	//Should be Cook() for ever
 	usecase.Cook()
+}
+
+func init() {
+	environment, isSet := os.LookupEnv("ENVIRONMENT")
+	if !isSet {
+		environment = "local"
+	}
+	viper.SetConfigName(environment)
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("./config/")
+	viper.AutomaticEnv()
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
 }

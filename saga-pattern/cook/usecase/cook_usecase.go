@@ -2,7 +2,11 @@ package usecase
 
 import (
 	"fmt"
+	"log"
 	"sagapattern/cook/domain"
+	"time"
+
+	"github.com/spf13/viper"
 )
 
 type cookUsecase struct {
@@ -18,8 +22,15 @@ func NewCookUsecase(barCounterRepository domain.BarCounterRepository, orderRepos
 }
 
 func (usecase *cookUsecase) Cook() {
-	order := usecase.orderRepository.Consumes()
-	//Should be a go func
-	fmt.Println("cooking order", order)
-	usecase.barCounterRepository.Delivery(&order)
+	for {
+		order, err := usecase.orderRepository.Consumes()
+		if err != nil {
+			log.Println("No message found, sleeping", viper.GetInt("app.sleep_period"), "seconds")
+			time.Sleep(time.Duration(viper.GetInt("app.sleep_period")) * time.Second)
+			continue
+		}
+		//Should be a go func
+		fmt.Println("cooking order", order)
+		usecase.barCounterRepository.Delivery(order)
+	}
 }

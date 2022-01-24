@@ -1,17 +1,14 @@
 package queue
 
-//ref: https://zenidas.wordpress.com/recipes/send-message-to-sqslocalstack-with-golang/
-//ref: https://onexlab-io.medium.com/localstack-sqs-a0c36fd13108
-
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"sagapattern/cook/domain"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/aws/aws-sdk-go/service/sqs/sqsiface"
@@ -19,25 +16,41 @@ import (
 
 type Queue interface {
 	SendMessage(order *domain.Order)
-	ReadMessage() domain.Order
+	ReadMessage() (*domain.Order, error)
 }
 
 type queue struct {
-	url    string
+	config QueueConfig
 	client sqsiface.SQSAPI
 }
 
-func NewQueue() *queue {
+type QueueConfig struct {
+	Region         string
+	Profile        string
+	QueueUrl       string
+	SenderConfig   *QueueSenderConfig
+	ConsumerConfig *QueueConsumerConfig
+}
+
+type QueueSenderConfig struct {
+}
+
+type QueueConsumerConfig struct {
+	MaxNumberOfMessages int64
+	VisibilityTimeout   int64
+	WaitTimeSeconds     int64
+}
+
+func NewQueue(config *QueueConfig) *queue {
 	cfg := aws.Config{
-		Region:      aws.String(endpoints.UsEast1RegionID),
-		Endpoint:    aws.String("http://localhost:4566"),
-		Credentials: credentials.NewSharedCredentials("", "localstack"),
+		Region:      aws.String(config.Region),
+		Credentials: credentials.NewSharedCredentials("", config.Profile),
 	}
 
 	sess := session.Must(session.NewSession(&cfg))
 
 	return &queue{
-		url:    "http://localhost:4566/000000000000/FoodsQueue",
+		config: *config,
 		client: sqs.New(sess),
 	}
 }
@@ -46,23 +59,23 @@ func (queue *queue) SendMessage(order *domain.Order) {
 	jsonMessage, _ := json.Marshal(order)
 
 	sqsMessage := &sqs.SendMessageInput{
-		QueueUrl:    aws.String(queue.url),
+		QueueUrl:    aws.String(queue.config.QueueUrl),
 		MessageBody: aws.String(string(jsonMessage)),
 	}
 
 	output, err := queue.client.SendMessage(sqsMessage)
 	if err != nil {
-		fmt.Printf("could not send message to queue %v: %v\n", queue.url, err)
+		fmt.Printf("could not send message to queue %v: %v\n", queue.config.QueueUrl, err)
 	}
 	fmt.Println(output)
 }
 
-func (queue *queue) ReadMessage() domain.Order {
+func (queue *queue) ReadMessage() (*domain.Order, error) {
 	params := &sqs.ReceiveMessageInput{
-		QueueUrl:            aws.String(queue.url),
-		MaxNumberOfMessages: aws.Int64(1),
-		VisibilityTimeout:   aws.Int64(1),
-		WaitTimeSeconds:     aws.Int64(1),
+		QueueUrl:            aws.String(queue.config.QueueUrl),
+		MaxNumberOfMessages: aws.Int64(queue.config.ConsumerConfig.MaxNumberOfMessages),
+		VisibilityTimeout:   aws.Int64(queue.config.ConsumerConfig.VisibilityTimeout),
+		WaitTimeSeconds:     aws.Int64(queue.config.ConsumerConfig.WaitTimeSeconds),
 	}
 	resp, err := queue.client.ReceiveMessage(params)
 
@@ -70,6 +83,9 @@ func (queue *queue) ReadMessage() domain.Order {
 		fmt.Println(err)
 	}
 
+	if len(resp.Messages) == 0 {
+		return nil, errors.New("no message received")
+	}
 	message := *resp.Messages[0]
 	fmt.Println(message)
 
@@ -79,5 +95,5 @@ func (queue *queue) ReadMessage() domain.Order {
 		log.Fatalf("Error occured during unmarshaling. Error: %s", err.Error())
 	}
 
-	return order
+	return &order, nil
 }

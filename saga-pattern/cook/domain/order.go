@@ -14,5 +14,5 @@ type BarCounterRepository interface {
 }
 
 type OrderRepository interface {
-	Consumes() Order
+	Consumes() (*Order, error)
 }

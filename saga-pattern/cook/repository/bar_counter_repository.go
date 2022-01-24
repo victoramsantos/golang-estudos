@@ -1,18 +1,29 @@
 package repository
 
 import (
-	"fmt"
 	"sagapattern/cook/domain"
+	"sagapattern/cook/repository/domain/queue"
+
+	"github.com/spf13/viper"
 )
 
 type barCounterRepository struct {
-	// Kafka Consumer Topic
+	queue queue.Queue
 }
 
 func NewBarCounterRepository() domain.BarCounterRepository {
-	return &barCounterRepository{}
+	config := queue.QueueConfig{
+		Region:         viper.GetString("queues.aws_config.region"),
+		Profile:        viper.GetString("queues.aws_config.profile"),
+		QueueUrl:       viper.GetString("queues.bar_counter.url"),
+		SenderConfig:   &queue.QueueSenderConfig{},
+		ConsumerConfig: nil,
+	}
+	return &barCounterRepository{
+		queue: queue.NewQueue(&config),
+	}
 }
 
 func (repository *barCounterRepository) Delivery(order *domain.Order) {
-	fmt.Println("adding to bar counter ", order.OrderId)
+	repository.queue.SendMessage(order)
 }

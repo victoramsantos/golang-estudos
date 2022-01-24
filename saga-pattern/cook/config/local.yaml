@@ -1,0 +1,13 @@
+app:
+  sleep_period: 5
+queues:
+  aws_config:
+    region: us-east-1
+    profile: localstack
+  order:
+    url: http://localhost:4566/000000000000/FoodsQueue
+    max_number_of_messages: 1
+    visibility_timeout: 1
+    wait_time_seconds: 1
+  bar_counter:
+    url: http://localhost:4566/000000000000/BarCounterQueue  
