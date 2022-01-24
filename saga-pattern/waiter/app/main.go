@@ -12,10 +12,20 @@ import (
 func main() {
 	e := echo.New()
 
-	repository := repository.NewOrderRepository()
-	usecase := usecase.NewOrderUsecase(repository)
-	controller.NewOrderController(e, usecase)
+	initOrderService(e)
+	initMenuService(e)
 
 	log.Fatal(e.Start(":8080"))
+}
 
+func initOrderService(e *echo.Echo) {
+	repository := repository.NewOrderRepository()
+	usecase := usecase.NewOrderUsecase(repository)
+	controller.InitOrderController(e, usecase)
+}
+
+func initMenuService(e *echo.Echo) {
+	repository := repository.NewMenuRepository()
+	usecase := usecase.NewMenuUsecase(repository)
+	controller.InitMenuController(e, usecase)
 }

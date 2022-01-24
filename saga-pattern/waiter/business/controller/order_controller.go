@@ -13,7 +13,7 @@ type OrderController struct {
 	OrderUsecase domain.OrderUsecase
 }
 
-func NewOrderController(e *echo.Echo, usecase domain.OrderUsecase) {
+func InitOrderController(e *echo.Echo, usecase domain.OrderUsecase) {
 	handler := &OrderController{
 		OrderUsecase: usecase,
 	}
