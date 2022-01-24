@@ -7,10 +7,11 @@ services:
     environment: 
     - AWS_DEFAULT_REGION=us-east-1
     - EDGE_PORT=4566
-    - SERVICES=sqs
+    - SERVICES=sqs,dynamodb
     
     volumes:
-      - './:/docker-entrypoint-initaws.d'
+      - './bootstrap/:/docker-entrypoint-initaws.d'
+      - './resources/:/resources'
     network_mode: host
 
 volumes:
