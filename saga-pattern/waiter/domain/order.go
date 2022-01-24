@@ -2,7 +2,7 @@ package domain
 
 type Order struct {
 	OrderId int    `json:"order_id"`
-	ItemId  []int  `json:"items" validate:"required"`
+	Items   []int  `json:"items" validate:"required"`
 	Status  string `json:"status"`
 }
 
