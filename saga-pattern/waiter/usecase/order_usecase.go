@@ -14,10 +14,6 @@ func NewOrderUsecase(repository domain.OrderRepository) domain.OrderUsecase {
 
 func (usecase *orderUsecase) OrderRequest(order *domain.Order) error {
 	order.Status = "ORDERED"
-	order.OrderId = usecase.repository.LastOrderNumber()
+	order.OrderId = 1
 	return usecase.repository.MakeOrder(order)
-}
-
-func (usecase *orderUsecase) ListOrders() []domain.Order {
-	return usecase.repository.ListOrders()
 }

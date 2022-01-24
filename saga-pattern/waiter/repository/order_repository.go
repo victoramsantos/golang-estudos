@@ -1,27 +1,22 @@
 package repository
 
-import "sagapattern/waiter/domain"
+import (
+	"sagapattern/waiter/domain"
+	"sagapattern/waiter/repository/domain/queue"
+)
 
 type orderRepository struct {
-	orders []domain.Order
+	queue queue.Queue
 }
 
 func NewOrderRepository() domain.OrderRepository {
 	return &orderRepository{
-		orders: make([]domain.Order, 0),
+		queue: queue.NewQueue(),
 	}
 }
 
 func (repository *orderRepository) MakeOrder(order *domain.Order) error {
-	repository.orders = append(repository.orders, *order)
+	repository.queue.SendMessage(order)
 
 	return nil
-}
-
-func (repository *orderRepository) ListOrders() []domain.Order {
-	return repository.orders
-}
-
-func (repository *orderRepository) LastOrderNumber() int {
-	return len(repository.orders) + 1
 }

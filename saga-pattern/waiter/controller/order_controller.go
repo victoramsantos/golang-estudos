@@ -19,7 +19,6 @@ func InitOrderController(e *echo.Echo, usecase domain.OrderUsecase) {
 	}
 
 	e.POST("/order", handler.OrderRequest)
-	e.GET("/order", handler.ListOrders)
 }
 
 func (ctl *OrderController) OrderRequest(ctx echo.Context) error {
@@ -44,11 +43,6 @@ func (ctl *OrderController) OrderRequest(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, ResponseError{err.Error()})
 	}
 	return ctx.JSON(http.StatusCreated, order)
-}
-
-func (ctl *OrderController) ListOrders(ctx echo.Context) error {
-	orders := ctl.OrderUsecase.ListOrders()
-	return ctx.JSON(http.StatusOK, orders)
 }
 
 func isRequestValid(m *domain.Order) (bool, error) {

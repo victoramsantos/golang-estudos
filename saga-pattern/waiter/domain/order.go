@@ -8,11 +8,8 @@ type Order struct {
 
 type OrderUsecase interface {
 	OrderRequest(*Order) error
-	ListOrders() []Order
 }
 
 type OrderRepository interface {
 	MakeOrder(*Order) error
-	ListOrders() []Order
-	LastOrderNumber() int
 }
