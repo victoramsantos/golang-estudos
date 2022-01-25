@@ -7,7 +7,9 @@ import (
 	"sagapattern/waiter/repository"
 	"sagapattern/waiter/usecase"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo-contrib/prometheus"
+
+	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 )
 
@@ -16,6 +18,9 @@ func main() {
 
 	initOrderService(e)
 	initMenuService(e)
+
+	p := prometheus.NewPrometheus("echo", nil)
+	p.Use(e)
 
 	log.Fatal(e.Start(":" + viper.GetString("app.server.port")))
 }
@@ -33,6 +38,10 @@ func initMenuService(e *echo.Echo) {
 }
 
 func init() {
+	setupEnvVars()
+}
+
+func setupEnvVars() {
 	environment, isSet := os.LookupEnv("ENVIRONMENT")
 	if !isSet {
 		environment = "local"

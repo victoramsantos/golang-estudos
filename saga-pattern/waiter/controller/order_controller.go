@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"sagapattern/waiter/domain"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	validator "gopkg.in/go-playground/validator.v9"
 )
