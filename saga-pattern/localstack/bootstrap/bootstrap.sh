@@ -34,4 +34,4 @@ awslocal dynamodb create-table \
 
 
 awslocal dynamodb batch-write-item \
-    --request-items file:///resources/dynamodb/menu/menu.json     
+    --request-items file:///resources/dynamodb/menu.json
