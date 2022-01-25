@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  localstack:
+    container_name: saga-pattern-stack
+    image: localstack/localstack:0.13.3
+    environment: 
+    - AWS_DEFAULT_REGION=us-east-1
+    - EDGE_PORT=4566
+    - SERVICES=sqs,dynamodb
+    
+    volumes:
+      - './bootstrap/:/docker-entrypoint-initaws.d'
+      - './resources/:/resources'
+    network_mode: host
+
+volumes:
+  data-volume:
