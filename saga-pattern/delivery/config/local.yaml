@@ -1,0 +1,13 @@
+app:
+  sleep_period: 5
+  delivery_period: 4
+aws_config:
+  region: us-east-1
+  profile: localstack
+  endpoint: http://localhost:4566
+queues:
+  bar_counter:
+    url: http://localhost:4566/000000000000/BarCounterQueue
+    max_number_of_messages: 1
+    visibility_timeout: 1
+    wait_time_seconds: 1
