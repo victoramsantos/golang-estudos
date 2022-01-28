@@ -1,6 +1,8 @@
 app:
   sleep_period: 5
   delivery_period: 4
+  server:
+    port: 8081
 aws_config:
   region: us-east-1
   profile: localstack

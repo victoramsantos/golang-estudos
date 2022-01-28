@@ -21,6 +21,7 @@ func NewDeliveryUsecase(barCounterRepository domain.BarCounterRepository) domain
 
 func (usecase *deliveryUsecase) Delivery() {
 	for {
+		start := time.Now().Unix()
 		order, err := usecase.barCounterRepository.Delivery()
 		if err != nil {
 			log.Println("No message found, sleeping", viper.GetInt("app.sleep_period"), "seconds")
@@ -29,6 +30,7 @@ func (usecase *deliveryUsecase) Delivery() {
 		}
 		//Should be a go func
 		delivery(order)
+		domain.METRICS.MethodHistogram.WithLabelValues("delivery").Observe(float64(time.Now().Unix() - start))
 	}
 }
 
