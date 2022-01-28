@@ -16,13 +16,16 @@ import (
 func main() {
 	e := echo.New()
 
+	initPrometheus(e)
 	initOrderService(e)
 	initMenuService(e)
 
+	log.Fatal(e.Start(":" + viper.GetString("app.server.port")))
+}
+
+func initPrometheus(e *echo.Echo) {
 	p := prometheus.NewPrometheus("echo", nil)
 	p.Use(e)
-
-	log.Fatal(e.Start(":" + viper.GetString("app.server.port")))
 }
 
 func initOrderService(e *echo.Echo) {
