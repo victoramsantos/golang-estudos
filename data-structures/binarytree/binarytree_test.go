@@ -76,4 +76,37 @@ func TestBinaryTree(t *testing.T) {
 
 	})
 
+	t.Run("height - only root", func(t *testing.T) {
+		values := []int{5}
+		tree := binarytree.NewBinaryTree(values[0])
+
+		for i := 1; i < len(values); i++ {
+			tree.Add(values[i])
+		}
+
+		assert.Equal(t, 1, tree.Height())
+	})
+
+	t.Run("height - unsorted", func(t *testing.T) {
+		values := []int{10, 4, 5, 3, 2, 1, 0, -1}
+		tree := binarytree.NewBinaryTree(values[0])
+
+		for i := 1; i < len(values); i++ {
+			tree.Add(values[i])
+		}
+
+		assert.Equal(t, 7, tree.Height())
+	})
+
+	t.Run("height - ordered", func(t *testing.T) {
+		values := []int{1, 2, 3, 4, 5, 6, 7, 8}
+		tree := binarytree.NewBinaryTree(values[0])
+
+		for i := 1; i < len(values); i++ {
+			tree.Add(values[i])
+		}
+
+		assert.Equal(t, 8, tree.Height())
+	})
+
 }

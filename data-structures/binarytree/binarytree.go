@@ -118,5 +118,26 @@ func (tree *BinaryTree) HasValue(value int) bool {
 	return false
 }
 
-// HasValue
-// Height
+func (tree *BinaryTree) Height() int {
+	return tree._height() + 1
+}
+
+func (tree *BinaryTree) _height() int {
+	if tree == nil {
+		return 0
+	}
+	var leftHeight, rightHeight int
+
+	if tree.left != nil {
+		leftHeight = tree.left._height() + 1
+	}
+	if tree.right != nil {
+		rightHeight = tree.right._height() + 1
+	}
+
+	if leftHeight > rightHeight {
+		return leftHeight
+	} else {
+		return rightHeight
+	}
+}
