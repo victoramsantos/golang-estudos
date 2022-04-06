@@ -73,7 +73,6 @@ func TestBinaryTree(t *testing.T) {
 		assert.False(t, tree.HasValue(0))
 		assert.False(t, tree.HasValue(6))
 		assert.False(t, tree.HasValue(8))
-
 	})
 
 	t.Run("height - only root", func(t *testing.T) {
@@ -107,6 +106,25 @@ func TestBinaryTree(t *testing.T) {
 		}
 
 		assert.Equal(t, 8, tree.Height())
+	})
+
+	t.Run("flattening tree", func(t *testing.T) {
+		values := []int{5, 3, 7, 1, 2, 4}
+		tree := binarytree.NewBinaryTree(values[0])
+
+		for i := 1; i < len(values); i++ {
+			tree.Add(values[i])
+		}
+
+		array := tree.Flatten()
+
+		assert.Equal(t, tree.CountMembers(), len(array))
+		assert.Contains(t, array, 5)
+		assert.Contains(t, array, 3)
+		assert.Contains(t, array, 7)
+		assert.Contains(t, array, 1)
+		assert.Contains(t, array, 2)
+		assert.Contains(t, array, 4)
 	})
 
 }

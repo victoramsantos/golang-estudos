@@ -1,6 +1,8 @@
 package binarytree
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type BinaryTree struct {
 	left  *BinaryTree
@@ -140,4 +142,18 @@ func (tree *BinaryTree) _height() int {
 	} else {
 		return rightHeight
 	}
+}
+
+func (tree *BinaryTree) Flatten() []int {
+	partial := make([]int, 0)
+
+	if tree.right != nil {
+		partial = append(tree.right.Flatten(), partial...)
+	}
+
+	if tree.left != nil {
+		partial = append(tree.left.Flatten(), partial...)
+	}
+
+	return append(partial, []int{tree.value}...)
 }
