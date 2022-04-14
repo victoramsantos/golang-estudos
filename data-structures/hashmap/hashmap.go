@@ -8,12 +8,12 @@ import (
 )
 
 type Hashmap struct {
-	arrayMap []*linkedlist.LinkedList
+	arrayMap []*linkedlist.StringLinkedList
 	size     int
 }
 
 func NewHashMap(size int) *Hashmap {
-	array := make([]*linkedlist.LinkedList, size)
+	array := make([]*linkedlist.StringLinkedList, size)
 
 	for i := 0; i < size; i++ {
 		array[i] = nil
@@ -27,13 +27,12 @@ func NewHashMap(size int) *Hashmap {
 
 func (hashmap *Hashmap) Add(str string) {
 	hash := calcHash(str)
-	fmt.Printf("%s:%d\n", str, hash)
 	position := hash % hashmap.size
 
 	if hashmap.arrayMap[position] == nil {
-		hashmap.arrayMap[position] = linkedlist.NewLinkedList(hash)
+		hashmap.arrayMap[position] = linkedlist.NewStringLinkedList(linkedlist.NewValue(str))
 	} else {
-		hashmap.arrayMap[position].Add(hash)
+		hashmap.arrayMap[position].Add(linkedlist.NewValue(str))
 	}
 }
 
@@ -63,4 +62,11 @@ func (hashmap *Hashmap) Print() {
 %s
 		]
 	}`, hashmap.size, maps)
+}
+
+func (hashmap *Hashmap) HasValue(value string) bool {
+	hash := calcHash(value)
+	position := hash % hashmap.size
+
+	return hashmap.arrayMap[position].HasValue(linkedlist.NewValue(value))
 }

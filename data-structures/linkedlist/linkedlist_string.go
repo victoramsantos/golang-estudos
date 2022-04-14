@@ -49,3 +49,14 @@ func (list *StringLinkedList) ToString() string {
 	}
 	return fmt.Sprintf("[%s]", str)
 }
+
+func (list *StringLinkedList) HasValue(value Something) bool {
+	if list.value.GetValue() == value.GetValue() {
+		return true
+	} else {
+		if list.next != nil {
+			return list.next.HasValue(value)
+		}
+		return false
+	}
+}

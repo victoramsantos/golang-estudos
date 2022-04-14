@@ -3,6 +3,7 @@ package hashmap_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/victoramsantos/golang-estudos/data-structures/hashmap"
 )
 
@@ -17,5 +18,10 @@ func TestHashmap(t *testing.T) {
 		hashmap.Add("bbb")
 
 		hashmap.Print()
+
+		assert.True(t, hashmap.HasValue("abc"))
+		assert.True(t, hashmap.HasValue("acb"))
+		assert.True(t, hashmap.HasValue("aaa"))
+		assert.True(t, hashmap.HasValue("bbb"))
 	})
 }
