@@ -82,3 +82,16 @@ func TestLinkedList(t *testing.T) {
 		assert.Equal(t, 1, list.Length())
 	})
 }
+
+func TestStringLinkedList(t *testing.T) {
+
+	t.Run("printing values", func(t *testing.T) {
+		list := linkedlist.NewStringLinkedList(linkedlist.NewValue("a"))
+
+		for _, ch := range "bcde" {
+			list.Add(linkedlist.NewValue(string(ch)))
+		}
+		fmt.Println(list.ToString())
+	})
+
+}
